@@ -11,3 +11,6 @@ Penjelasa: Program ini adalah contoh obrolan WebSocket dasar yang dibangun denga
 
 ![alt text](image-3.png)
 Ini adalah update connection WebSocket dasar Rust. Jalankan cargo run --bin server (satu terminal) lalu cargo run --bin client (beberapa terminal). Port koneksi diubah ke 8080 di server dan klien. Protokolnya tetap WebSocket (ws://), ditangani oleh tokio-websockets. Ketik pesan di klien, tekan Enter, dan pesan akan disiarkan ke semua klien lain secara real-time.
+
+![alt text](image-4.png)
+Ini adalah modifikasi connection WebSocket Rust yang berjalan di port 8080 dan menggunakan protokol WebSocket. Untuk menjalankan, cukup buka satu terminal untuk cargo run --bin server dan beberapa terminal lain untuk cargo run --bin client. Sebagai modifikasi baru, server kini menetapkan ID unik (misalnya, Client #1) kepada setiap klien yang terhubung, dan setiap pesan yang disiarkan akan diawali dengan ID klien pengirim ini (perubahan di src/bin/server.rs). Ketika user mengetik pesan di klien, semua klien akan melihatnya dengan ID pengirim, mempermudah identifikasi.

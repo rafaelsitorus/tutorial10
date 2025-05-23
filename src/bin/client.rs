@@ -6,49 +6,59 @@ use tokio_websockets::{ClientBuilder, Message};
 
 #[tokio::main]
 async fn main() -> Result<(), tokio_websockets::Error> {
+    // Mengubah port ke 8080
     let (mut ws_stream, _) =
         ClientBuilder::from_uri(Uri::from_static("ws://127.0.0.1:8080"))
             .connect()
             .await?;
 
+    println!("Connected to WebSocket server at ws://127.0.0.1:8080");
+    println!("Type messages and press Enter to send. Ctrl+D to disconnect.");
+
     let stdin = tokio::io::stdin();
     let mut stdin = BufReader::new(stdin).lines();
 
-    // Split the WebSocket stream into a sender and receiver
     let (mut ws_sender, mut ws_receiver) = ws_stream.split();
 
     loop {
         tokio::select! {
-            // Read line from stdin and send it to the WebSocket server
+            // Membaca baris dari stdin dan mengirimnya ke server WebSocket
             line = stdin.next_line() => {
                 match line {
                     Ok(Some(text)) => {
                         ws_sender.send(Message::text(text)).await?;
                     }
                     Ok(None) => {
-                        // EOF on stdin, client is done sending messages
+                        // EOF pada stdin, klien selesai mengirim pesan
                         break;
                     }
                     Err(e) => {
-                        eprintln!("Stdin read error: {e}");
+                        eprintln!("Stdin read error: {}", e);
                         break;
                     }
                 }
             }
-            // Receive message from the WebSocket server and print it
+            // Menerima pesan dari server WebSocket dan mencetaknya
             msg = ws_receiver.next() => {
                 match msg {
                     Some(Ok(msg)) => {
                         if let Some(text) = msg.as_text() {
-                            println!("{}", text);
+                            // Menambahkan awalan "From server: " sebelum mencetak
+                            println!("From server: {}", text);
+                        } else if msg.is_binary() {
+                            println!("Received binary message (not displayed).");
+                        } else if msg.is_ping() {
+                            println!("Received PING.");
+                        } else if msg.is_pong() {
+                            println!("Received PONG.");
                         }
                     }
                     Some(Err(e)) => {
-                        eprintln!("WebSocket error: {e}");
+                        eprintln!("WebSocket error: {}", e);
                         break;
                     }
                     None => {
-                        // Server closed the connection
+                        // Server menutup koneksi
                         println!("Server disconnected.");
                         break;
                     }
