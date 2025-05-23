@@ -10,6 +10,7 @@ use std::{
     time::Duration,
 };
 // The timer we wrote in the previous section:
+mod timer_future;
 use timer_future::TimerFuture;
 
 /// Task executor that receives tasks off of a channel and runs them.
