@@ -8,3 +8,6 @@ Rust executor tidak menjamin urutan eksekusi antar task, sehingga hasil done, do
 
 ![alt text](image-2.png)
 Penjelasa: Program ini adalah contoh obrolan WebSocket dasar yang dibangun dengan Rust, menggunakan tokio untuk operasi asinkron. Cukup jalankan cargo run --bin server di satu terminal, lalu cargo run --bin client di beberapa terminal lain. Setiap kali mengetik pesan di salah satu klien dan menekan Enter, pesan itu akan dikirim ke server, yang kemudian menyiarkannya kembali ke semua klien yang terhubung, memungkinkan semua orang melihat pesan satu sama lain secara real-time.
+
+![alt text](image-3.png)
+Ini adalah update connection WebSocket dasar Rust. Jalankan cargo run --bin server (satu terminal) lalu cargo run --bin client (beberapa terminal). Port koneksi diubah ke 8080 di server dan klien. Protokolnya tetap WebSocket (ws://), ditangani oleh tokio-websockets. Ketik pesan di klien, tekan Enter, dan pesan akan disiarkan ke semua klien lain secara real-time.
